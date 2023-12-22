@@ -57,10 +57,8 @@ pipeline {
                 sh 'docker push arsgoo/pawnshop_tests:latest'
             }
         }
-    }
-    post {
-        always {
-            node ('Built-In Node') {
+        stage('Logout') {
+            steps {
                 sh 'docker logout'
             }
         }
