@@ -7,6 +7,7 @@ pipeline {
     }
     stages {
         stage('Check scm') {
+            agent any
             steps {
                 checkout scm
             }
@@ -18,17 +19,15 @@ pipeline {
             }
         }
         stage('Test') {
+            docker {
+                image 'alpine'
+                args '-u=\"root\"'
+            }
             steps {
-                script {
-                    docker {
-                        image 'alpine'
-                        args '-u="root"'
-                        sh 'apk add --update python3 py-pip'
-                        sh 'pip install xmlrunner'
-                        sh 'cp pawnshop_tests.py .'
-                        sh 'python3 pawnshop_tests.py'
-                    }
-                }
+                sh 'apk add --update python3 py-pip'
+                sh 'pip install xmlrunner'
+                sh 'cp pawnshop_tests.py .'
+                sh 'python3 pawnshop_tests.py'
             }
             post {
                 always {
@@ -44,28 +43,18 @@ pipeline {
         }
         stage('Image creation') {
             steps {
-                script {
-                    docker {
-                        sh 'cp Dockerfile .'
-                        sh 'docker build -t arsgoo/pawnshop_tests:latest .'
-                    }
-                }
+                sh 'cp Dockerfile .'
+                sh 'docker build -t arsgoo/pawnshop_tests:latest .'
             }
         }
         stage('Login') {
             steps {
-                script {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
         stage('Push') {
             steps {
-                script {
-                    docker {
-                        sh 'docker push arsgoo/pawnshop_tests:latest'
-                    }
-                }
+                sh 'docker push arsgoo/pawnshop_tests:latest'
             }
         }
     }
