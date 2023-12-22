@@ -25,7 +25,7 @@ pipeline {
             }
             steps {
                 sh 'apk add --update python3 py-pip'
-                sh 'pip install xmlrunner'
+                sh 'pip install junitparser'
                 sh 'cp pawnshop_tests.py .'
                 sh 'python3 pawnshop_tests.py'
             }
