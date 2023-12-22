@@ -1,6 +1,4 @@
 pipeline {
-    options { timestamps() }
-
     agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('arsgoo-dockerhub')
@@ -22,7 +20,7 @@ pipeline {
             agent {
                 docker {
                     image 'alpine'
-                    args '-u=\"root\"'
+                    args '-u="root"'
                 }
             }
             steps {
