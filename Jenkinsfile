@@ -1,13 +1,17 @@
 pipeline {
     options { timestamps() }
 
-    agent any
+    agent {
+        docker {
+            image 'alpine'
+            args '-u="root"'
+        }
+    }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('arsgoo-dockerhub')
     }
     stages {
         stage('Check scm') {
-            agent any
             steps {
                 checkout scm
             }
@@ -19,12 +23,6 @@ pipeline {
             }
         }
         stage('Test') {
-            agent {
-                docker {
-                    image 'alpine'
-                    args '-u="root"'
-                }
-            }
             steps {
                 sh 'apk add --update python3 py-pip'
                 sh 'pip install xmlrunner'
