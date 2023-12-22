@@ -16,8 +16,8 @@ variable "REPOSITORY_URI" {
   type = string
 }
 
-resource "aws_lightsail_container_service" "days_in_month_application" {
-  name = "days_in_month-app"
+resource "aws_lightsail_container_service" "month_application" {
+  name = "month-app"
   power = "nano"
   scale = 1
 
@@ -33,9 +33,9 @@ resource "aws_lightsail_container_service" "days_in_month_application" {
   }
 }
 
-resource "aws_lightsail_container_service_deployment_version" "days_in_month_app_deployment" {
+resource "aws_lightsail_container_service_deployment_version" "month_app_deployment" {
   container {
-    container_name = "days_in_month-application"
+    container_name = "month-application"
 
     image = "${var.REPOSITORY_URI}:latest"
     
@@ -60,5 +60,5 @@ resource "aws_lightsail_container_service_deployment_version" "days_in_month_app
     }
   }
 
-  service_name = aws_lightsail_container_service.days_in_month_application.name
+  service_name = aws_lightsail_container_service.month_application.name
 }
