@@ -7,7 +7,6 @@ pipeline {
     }
     stages {
         stage('Check scm') {
-            agent any
             steps {
                 checkout scm
             }
@@ -19,11 +18,14 @@ pipeline {
             }
         }
         stage('Test') {
-            docker {
-                image 'alpine'
-                args '-u=\"root\"'
-            }
             steps {
+                script {
+                    // Використовуйте блок 'script' для виконання Docker-команд
+                    docker {
+                        image 'alpine'
+                        args '-u="root"'
+                    }
+                }
                 sh 'apk add --update python3 py-pip'
                 sh 'pip install xmlrunner'
                 sh 'cp pawnshop_tests.py .'
@@ -60,7 +62,9 @@ pipeline {
     }
     post {
         always {
-            sh 'docker logout'
+            script {
+                sh 'docker logout'
+            }
         }
     }
 }
