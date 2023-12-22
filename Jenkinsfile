@@ -28,8 +28,8 @@ pipeline {
             steps {
                 sh 'apk add --update python3 py-pip'
                 sh 'pip install xmlrunner'
-                sh 'cp Lab3/pawnshop_tests.py .'
-                sh 'python3 Lab3/pawnshop_tests.py'
+                sh 'cp pawnshop_tests.py .'
+                sh 'python3 pawnshop_tests.py'
             }
             post {
                 always {
@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Image creation') {
             steps {
-                sh 'cp Lab3/Dockerfile .'
+                sh 'cp Dockerfile .'
                 sh 'docker build -t arsgoo/pawnshop_tests:latest .'
             }
         }
