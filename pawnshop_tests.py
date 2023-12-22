@@ -1,6 +1,7 @@
 import unittest
 import pawnshop as ps
 
+
 class TestGoodsFunctions(unittest.TestCase):
     def setUp(self):
         self.goods = {
@@ -53,4 +54,7 @@ class TestGoodsFunctions(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().loadTestsFromTestCase(TestGoodsFunctions))
+    import xmlrunner
+
+    runner = xmlrunner.XMLTestRunner(output="test-reports")
+    unittest.main(testRunner=runner)
