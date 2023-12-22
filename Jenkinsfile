@@ -19,18 +19,17 @@ pipeline {
             }
         }
         stage('Test') {
-            steps {
-                script {
-                    agent any
-                    docker {
-                        image 'alpine'
-                        args '-u="root"'
-                    }
-                    sh 'apk add --update python3 py-pip'
-                    sh 'pip install xmlrunner'
-                    sh 'cp pawnshop_tests.py .'
-                    sh 'python3 pawnshop_tests.py'
+            agent {
+                docker {
+                    image 'alpine'
+                    args '-u=\"root\"'
                 }
+            }
+            steps {
+                sh 'apk add --update python3 py-pip'
+                sh 'pip install xmlrunner'
+                sh 'cp pawnshop_tests.py .'
+                sh 'python3 pawnshop_tests.py'
             }
             post {
                 always {
