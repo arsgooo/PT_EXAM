@@ -25,7 +25,7 @@ def days_in_month(month):
 
 @app.route('/', methods=['GET'])
 def get_days_in_month():
-    month = "January"
+    month = "August"
     try:
         result = days_in_month(month)
         return f"{month} has {result} days."
