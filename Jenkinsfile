@@ -8,9 +8,7 @@ pipeline {
     stages {
         stage('Check scm') {
             steps {
-                script {
-                    checkout scm
-                }
+                checkout scm
             }
         }
         stage('Build') {
@@ -22,11 +20,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    node {
-                        docker {
-                            image 'alpine'
-                            args '-u="root"'
-                        }
+                    // Використовуйте блок 'script' для виконання Docker-команд
+                    container('alpine') {
                         sh 'apk add --update python3 py-pip'
                         sh 'pip install xmlrunner'
                         sh 'cp pawnshop_tests.py .'
@@ -48,32 +43,24 @@ pipeline {
         }
         stage('Image creation') {
             steps {
-                script {
-                    sh 'cp Dockerfile .'
-                    sh 'docker build -t arsgoo/pawnshop_tests:latest .'
-                }
+                sh 'cp Dockerfile .'
+                sh 'docker build -t arsgoo/pawnshop_tests:latest .'
             }
         }
         stage('Login') {
             steps {
-                script {
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
         stage('Push') {
             steps {
-                script {
-                    sh 'docker push arsgoo/pawnshop_tests:latest'
-                }
+                sh 'docker push arsgoo/pawnshop_tests:latest'
             }
         }
     }
     post {
         always {
-            script {
-                sh 'docker logout'
-            }
+            sh 'docker logout'
         }
     }
 }
