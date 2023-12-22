@@ -60,7 +60,7 @@ pipeline {
     }
     post {
         always {
-            node ('my_node') {
+            node ('Built-In Node') {
                 sh 'docker logout'
             }
         }
