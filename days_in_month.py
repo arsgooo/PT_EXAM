@@ -1,3 +1,7 @@
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
 def days_in_month(month):
     months = {
         "January": 31,
@@ -19,10 +23,14 @@ def days_in_month(month):
     else:
         raise ValueError("Invalid month name")
 
-if __name__ == "__main__":
-    user_input = "January"
+@app.route('/', methods=['GET'])
+def get_days_in_month():
+    month = "January"
     try:
-        result = days_in_month(user_input)
-        print(f"{user_input} has {result} days.")
+        result = days_in_month(month)
+        return f"{month} has {result} days."
     except ValueError as e:
-        print(e)
+        return jsonify({"error": str(e)}), 400
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=3000)

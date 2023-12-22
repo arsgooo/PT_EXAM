@@ -111,5 +111,4 @@ jobs:
           REPOSITORY_URI: ${{ secrets.REPOSITORY_URI }}
       run: terraform apply -input=false -auto-approve -var="REPOSITORY_URI=${{ secrets.REPOSITORY_URI }}"
       working-directory: terraform
-
-
+      
