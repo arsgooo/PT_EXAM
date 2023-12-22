@@ -19,7 +19,7 @@ pipeline {
             }
         }
         stage('Test') {
-            agent {
+            agent any {
                 docker {
                     image 'alpine'
                     args '-u=\"root\"'
