@@ -1,12 +1,7 @@
 pipeline {
     options { timestamps() }
 
-    agent {
-        docker {
-            image 'alpine'
-            args '-u="root"'
-        }
-    }
+    agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('arsgoo-dockerhub')
     }
@@ -24,10 +19,16 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'apk add --update python3 py-pip'
-                sh 'pip install xmlrunner'
-                sh 'cp pawnshop_tests.py .'
-                sh 'python3 pawnshop_tests.py'
+                script {
+                    docker {
+                        image 'alpine'
+                        args '-u="root"'
+                        sh 'apk add --update python3 py-pip'
+                        sh 'pip install xmlrunner'
+                        sh 'cp pawnshop_tests.py .'
+                        sh 'python3 pawnshop_tests.py'
+                    }
+                }
             }
             post {
                 always {
@@ -43,18 +44,28 @@ pipeline {
         }
         stage('Image creation') {
             steps {
-                sh 'cp Dockerfile .'
-                sh 'docker build -t arsgoo/pawnshop_tests:latest .'
+                script {
+                    docker {
+                        sh 'cp Dockerfile .'
+                        sh 'docker build -t arsgoo/pawnshop_tests:latest .'
+                    }
+                }
             }
         }
         stage('Login') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                script {
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                }
             }
         }
         stage('Push') {
             steps {
-                sh 'docker push arsgoo/pawnshop_tests:latest'
+                script {
+                    docker {
+                        sh 'docker push arsgoo/pawnshop_tests:latest'
+                    }
+                }
             }
         }
     }
