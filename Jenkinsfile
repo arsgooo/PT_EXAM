@@ -57,10 +57,10 @@ pipeline {
                 sh 'docker push arsgoo/pawnshop_tests:latest'
             }
         }
-        stage('Logout') {
-            steps {
-                sh 'docker logout'
-            }
+    }
+    post {
+        always {
+            sh 'docker logout'
         }
     }
 }
