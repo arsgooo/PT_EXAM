@@ -20,7 +20,7 @@ def days_in_month(month):
         raise ValueError("Invalid month name")
 
 if __name__ == "__main__":
-    user_input = input("Enter the month: ")
+    user_input = "January"
     try:
         result = days_in_month(user_input)
         print(f"{user_input} has {result} days.")
