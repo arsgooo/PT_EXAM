@@ -7,6 +7,7 @@ pipeline {
     }
     stages {
         stage('Check scm') {
+            agent any
             steps {
                 checkout scm
             }
@@ -18,16 +19,17 @@ pipeline {
             }
         }
         stage('Test') {
-            steps {
-                script {
-                    // Використовуйте блок 'script' для виконання Docker-команд
-                    container('alpine') {
-                        sh 'apk add --update python3 py-pip'
-                        sh 'pip install xmlrunner'
-                        sh 'cp pawnshop_tests.py .'
-                        sh 'python3 pawnshop_tests.py'
-                    }
+            agent {
+                docker {
+                    image 'alpine'
+                    args '-u=\"root\"'
                 }
+            }
+            steps {
+                sh 'apk add --update python3 py-pip'
+                sh 'pip install xmlrunner'
+                sh 'cp Lab3/pawnshop_tests.py .'
+                sh 'python3 Lab3/pawnshop_tests.py'
             }
             post {
                 always {
@@ -43,7 +45,7 @@ pipeline {
         }
         stage('Image creation') {
             steps {
-                sh 'cp Dockerfile .'
+                sh 'cp Lab3/Dockerfile .'
                 sh 'docker build -t arsgoo/pawnshop_tests:latest .'
             }
         }
