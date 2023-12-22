@@ -46,7 +46,7 @@ resource "aws_lightsail_container_service_deployment_version" "month_app_deploym
   }
 
   public_endpoint {
-    container_name = "days_in_month-application"
+    container_name = "month-application"
     # Consistent with the port exposed by the Dockerfile and app.py
     container_port = 3000
 
