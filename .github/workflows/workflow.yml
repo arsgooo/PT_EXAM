@@ -1,12 +1,16 @@
-name: Python CI
+name: Python app deploy on AWS by gitAction v1
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  main_job:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,13 +42,13 @@ jobs:
         CI: true 
 
     - name: Build Docker image
-      run: docker build -t your-docker-image-name .
+      run: docker build -t months .
 
     - name: Push Docker image to DockerHub
       run: |
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-        docker tag your-docker-image-name "${{ secrets.DOCKERHUB_USERNAME }}/your-docker-image-name:latest"
-        docker push "${{ secrets.DOCKERHUB_USERNAME }}/your-docker-image-name:latest"
+        docker tag months "${{ secrets.DOCKERHUB_USERNAME }}/months:latest"
+        docker push "${{ secrets.DOCKERHUB_USERNAME }}/months:latest"
 
     - name: Setup AWS ECR Details
       uses: aws-actions/configure-aws-credentials@v1
